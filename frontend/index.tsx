@@ -126,8 +126,8 @@ function HelloWorldTypescriptBlock() {
   if (records?.length && gropuingField && chartField) {
     const groupedRecords = groupRecordsWithValues(
       records,
-      gropuingField!,
-      chartField!
+      gropuingField,
+      chartField
     );
     const piePortions = countGroupedValues(groupedRecords);
     chartData = formatDataForChart(piePortions);
@@ -172,7 +172,7 @@ function HelloWorldTypescriptBlock() {
           </FormField>
         )}
       </Box>
-      <Box>
+      <Box padding={2}>
         {gropuingField && chartField ? (
           <Pie data={chartData}></Pie>
         ) : (
