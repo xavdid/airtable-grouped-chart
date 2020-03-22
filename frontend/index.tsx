@@ -32,7 +32,7 @@ const groupRecordsWithValues = (
       }
       const chartValue = record.getCellValueAsString(chartField);
       const values = result[groupByValue] || new Set();
-      values.add(chartValue);
+      values.add(chartValue || "none");
       return {
         ...result,
         [groupByValue]: values
@@ -75,7 +75,7 @@ const formatDataForChart = (
         datasets: [
           {
             data: [],
-            // as many as needed will be used
+            // as many as needed will be used; if there are more categories, then they'll be grey
             backgroundColor: [
               colors.BLUE,
               colors.ORANGE,
@@ -84,8 +84,7 @@ const formatDataForChart = (
               colors.CYAN,
               colors.YELLOW,
               colors.TEAL,
-              colors.RED,
-              colors.GRAY
+              colors.RED
             ]
           }
         ]
@@ -110,21 +109,21 @@ function HelloWorldTypescriptBlock() {
 
   const gropuingField =
     table &&
-    table.getFieldByIdIfExists(globalConfig.get(
-      GlobalConfigKeys.GROUPING_FIELD_ID
-    ) as string);
+    table.getFieldByIdIfExists(
+      globalConfig.get(GlobalConfigKeys.GROUPING_FIELD_ID) as string
+    );
   const chartField =
     table &&
-    table.getFieldByIdIfExists(globalConfig.get(
-      GlobalConfigKeys.CHART_FIELD_ID
-    ) as string);
+    table.getFieldByIdIfExists(
+      globalConfig.get(GlobalConfigKeys.CHART_FIELD_ID) as string
+    );
 
   const records = useRecords(table!, {
     fields: [gropuingField, chartField]
   }) as Record[] | undefined;
 
   let chartData;
-  if (records) {
+  if (records?.length && gropuingField && chartField) {
     const groupedRecords = groupRecordsWithValues(
       records,
       gropuingField!,
@@ -160,7 +159,7 @@ function HelloWorldTypescriptBlock() {
         )}
         {table && (
           <FormField
-            label="Chart Field"
+            label="Count Field"
             width="33.33%"
             paddingLeft={1}
             marginBottom={0}
@@ -173,11 +172,11 @@ function HelloWorldTypescriptBlock() {
           </FormField>
         )}
       </Box>
-      <Box display="flex" padding={2}>
+      <Box>
         {gropuingField && chartField ? (
           <Pie data={chartData}></Pie>
         ) : (
-          <Text>Select a Table, Grouping field, and Chart field above.</Text>
+          <Text>Select a Table, Grouping field, and Count field above.</Text>
         )}
       </Box>
     </Box>
